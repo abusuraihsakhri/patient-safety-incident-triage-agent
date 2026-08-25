@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "patient-safety-incident-triage-engine"
+version = "2.0.0"
+description = "SafetyIncident Sentinel: AHRQ Common Formats & Root Cause Event Classifier"
+readme = "README.md"
+authors = [{ name = "Dr. Abu Suraih Sakhri", email = "abusuraih@example.com" }]
+license = { text = "MIT" }
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Medical Science Apps.",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+requires-python = ">=3.9"
+dependencies = []
+
+[project.scripts]
+patient-safety-incident-triage-engine = "patient_safety_incident_triage_agent.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/abusuraihsakhri/patient-safety-incident-triage-engine"
+Repository = "https://github.com/abusuraihsakhri/patient-safety-incident-triage-engine.git"
