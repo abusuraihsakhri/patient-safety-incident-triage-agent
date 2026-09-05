@@ -8,9 +8,12 @@ import json
 import time
 import hmac
 import hashlib
+import logging
 from typing import Dict, Any, List, Optional
 from datetime import datetime, timezone
 from pydantic import BaseModel, Field
+
+logger = logging.getLogger(__name__)
 
 PHI_PATTERNS = [
     re.compile(r"\b(?:MRN|mrn)[:#\s-]*\d{4,10}\b", re.IGNORECASE),
@@ -18,7 +21,7 @@ PHI_PATTERNS = [
     re.compile(r"\b(?:\+?1[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}\b"),
     re.compile(r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b"),
     re.compile(r"\b(?:DOB|Date of Birth)[:\s]*\d{1,2}[/-]\d{1,2}[/-]\d{2,4}\b", re.IGNORECASE),
-    re.compile(r"\b(?:Patient\s+Name|Patient)[:\s]+[A-Z][a-z]+\s+[A-Z][a-z]+\b", re.IGNORECASE),
+    re.compile(r"\b(?:Patient\s+Name|Patient:)\s+[A-Z][a-z]+\s+[A-Z][a-z]+\b", re.IGNORECASE),
     re.compile(r"\b(?:John\s+Doe|Jane\s+Smith|Alice\s+Johnson)\b", re.IGNORECASE),
 ]
 
@@ -56,8 +59,16 @@ class PHIGuard:
 
 class AuditTrail:
     """Cryptographic Tamper-Evident HMAC-SHA256 Audit Trail."""
+    DEFAULT_KEY = "patient-safety-incident-triage-agent-master-audit-key-2026"
+
     def __init__(self, secret_key: Optional[str] = None):
-        self.secret_key = (secret_key or os.getenv("AUDIT_SECRET_KEY", "patient-safety-incident-triage-agent-master-audit-key-2026")).encode("utf-8")
+        resolved_key = secret_key or os.getenv("AUDIT_SECRET_KEY", self.DEFAULT_KEY)
+        if resolved_key == self.DEFAULT_KEY:
+            logger.warning(
+                "AUDIT_SECRET_KEY environment variable not set — using default key. "
+                "Set a strong random key in production to ensure audit trail integrity."
+            )
+        self.secret_key = resolved_key.encode("utf-8")
         self.logs: List[Dict[str, Any]] = []
 
     def log(self, actor: str, actor_tier: str, event_type: str, details: Dict[str, Any]) -> Dict[str, Any]:

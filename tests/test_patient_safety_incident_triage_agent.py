@@ -23,6 +23,37 @@ def test_phi_guard_enforcement():
     PHIGuard.assert_no_phi("Analytical assay specimen KEY-001 optimal")
 
 
+def test_phi_guard_system_name_no_false_positive():
+    """System name 'Patient Safety Incident Triage Agent' must not trigger PHI guard."""
+    PHIGuard.assert_no_phi("Patient Safety Incident Triage Agent")
+    PHIGuard.assert_no_phi("Supervisor inquiry for Patient Safety Incident Triage Agent under CAP / CLSI / ISO Standards: Explain specifications")
+    PHIGuard.assert_no_phi("Patient Safety Incident Triage Agent API")
+
+
+def test_phi_guard_catches_actual_phi():
+    """Actual PHI patterns should still be caught."""
+    with pytest.raises(SecurityException):
+        PHIGuard.assert_no_phi("Patient: John Doe")
+    with pytest.raises(SecurityException):
+        PHIGuard.assert_no_phi("Patient Name: Jane Smith")
+    with pytest.raises(SecurityException):
+        PHIGuard.assert_no_phi("SSN 123-45-6789")
+    with pytest.raises(SecurityException):
+        PHIGuard.assert_no_phi("Contact patient at 555-123-4567")
+    with pytest.raises(SecurityException):
+        PHIGuard.assert_no_phi("Email: patient@example.com")
+    with pytest.raises(SecurityException):
+        PHIGuard.assert_no_phi("MRN-12345678")
+
+
+def test_phi_guard_redaction():
+    """PHIGuard.redact_phi should replace PHI with placeholder."""
+    redacted = PHIGuard.redact_phi("Patient: John Doe, SSN: 123-45-6789")
+    assert "REDACTED_IDENTIFIER" in redacted
+    assert "John Doe" not in redacted
+    assert "123-45-6789" not in redacted
+
+
 def test_specialized_workers():
     # Worker 1: QC Invariant
     p1 = SystemTaskPayload(task_id="T1", target_identifier="KEY-01", primary_metric=35.0)
