@@ -29,3 +29,9 @@ patient-safety-incident-triage-engine = "patient_safety_incident_triage_agent.cl
 [project.urls]
 Homepage = "https://github.com/abusuraihsakhri/patient-safety-incident-triage-agent"
 Repository = "https://github.com/abusuraihsakhri/patient-safety-incident-triage-agent.git"
+
+[tool.setuptools]
+py-modules = ["cli", "safety_incident", "enrichment", "simulator", "patient_safety_incident_triage_agent_app", "safety_incident_app"]
+
+[tool.setuptools.packages.find]
+include = ["agents*", "patient_safety_incident_triage_agent*"]
