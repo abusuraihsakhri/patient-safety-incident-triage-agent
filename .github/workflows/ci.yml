@@ -1,10 +1,14 @@
-name: Patient Safety Incident Triage Engine CI/CD & Security Verification
+name: Test Python and browser demo
 
 on:
   push:
-    branches: [ master, main ]
+    branches: [ master, main, "audit/**" ]
   pull_request:
     branches: [ master, main ]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test-and-audit:
@@ -12,29 +16,21 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.10", "3.11", "3.12"]
-
     steps:
-    - uses: actions/checkout@v4
-
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ matrix.python-version }}
-
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install fastapi uvicorn pydantic pytest
-
-    - name: Run Pytest Suite
-      run: |
-        pytest -v
-
-    - name: Security SAST & Zero-PHI Audit
-      run: |
-        python -c "
-        from agents.base import PHIGuard, AuditLogger
-        import pytest
-        assert AuditLogger.verify_integrity() is True
-        print('Security & Zero-PHI Audit Passed!')
-        "
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install application and test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[api,test]"
+          python -m pip check
+      - name: Python compilation
+        run: python -m compileall -q agents patient_safety_incident_triage_agent cli.py safety_incident.py
+      - name: Python tests
+        run: python -m pytest -q
+      - name: Browser script checks and rule tests
+        run: |
+          node --check web/app.mjs
+          node --test web/app.test.mjs

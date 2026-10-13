@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "patient-safety-incident-triage-engine"
 version = "2.0.0"
-description = "SafetyIncident Sentinel: AHRQ Common Formats & Root Cause Event Classifier"
+description = "Illustrative deterministic incident evaluation tools; not clinically validated"
 readme = "README.md"
 authors = [{ name = "Dr. Abu Suraih Sakhri", email = "abusuraih@example.com" }]
 license = { text = "MIT" }
@@ -16,12 +16,22 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Medical Science Apps.",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
-requires-python = ">=3.9"
-dependencies = []
+requires-python = ">=3.10"
+dependencies = ["pydantic>=2,<3"]
+
+[project.optional-dependencies]
+api = ["fastapi>=0.110,<1", "uvicorn>=0.29,<1"]
+test = ["pytest>=8,<10", "httpx>=0.27,<1"]
 
 [project.scripts]
 patient-safety-incident-triage-engine = "patient_safety_incident_triage_agent.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/abusuraihsakhri/patient-safety-incident-triage-engine"
-Repository = "https://github.com/abusuraihsakhri/patient-safety-incident-triage-engine.git"
+Homepage = "https://github.com/abusuraihsakhri/patient-safety-incident-triage-agent"
+Repository = "https://github.com/abusuraihsakhri/patient-safety-incident-triage-agent.git"
+
+[tool.setuptools]
+py-modules = ["cli", "safety_incident", "enrichment", "simulator", "patient_safety_incident_triage_agent_app", "safety_incident_app"]
+
+[tool.setuptools.packages.find]
+include = ["agents*", "patient_safety_incident_triage_agent*"]

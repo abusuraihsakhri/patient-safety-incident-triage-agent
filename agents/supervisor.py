@@ -3,6 +3,7 @@ Supervisor Orchestrator & Operations Intelligence for Patient Safety Incident Tr
 Domain: Clinical & Biomedical AI
 """
 import uuid
+import json
 from typing import Dict, Any, List, Optional
 from .base import AuditLogger, ActionExecutor, PHIGuard
 from .models import SystemTaskPayload, AgentAlert, ConsensusDossier, UrgencyLevel, SystemIntegrityStatus
@@ -25,6 +26,9 @@ class SystemSupervisor:
         PHIGuard.assert_no_phi(payload.task_id)
         PHIGuard.assert_no_phi(payload.target_identifier)
         PHIGuard.assert_no_phi(payload.status_descriptor)
+        # Inspect all nested attributes, not only the top-level identifiers.
+        # This heuristic is NOT a HIPAA de-identification guarantee.
+        PHIGuard.assert_no_phi(json.dumps(payload.model_dump(mode='json'), allow_nan=False))
 
         # Multi-worker evaluations
         all_alerts: List[AgentAlert] = []
