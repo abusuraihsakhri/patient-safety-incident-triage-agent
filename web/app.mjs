@@ -12,7 +12,9 @@ export function evaluateTask(input) {
   const taskId = String(input.task_id ?? "").trim();
   const targetId = String(input.target_identifier ?? "").trim();
   const status = String(input.status_descriptor ?? "NOMINAL").trim();
+  if (input.primary_metric === "" || input.primary_metric == null) throw new Error("Primary measurement is required.");
   const primary = Number(input.primary_metric);
+  if (input.secondary_metric === "") throw new Error("Secondary measurement must be numeric.");
   const secondary = Number(input.secondary_metric ?? 0);
   const critical = input.is_critical_flag === true;
   if (!taskId || !targetId || !status) throw new Error("Task ID, target ID and status are required.");
