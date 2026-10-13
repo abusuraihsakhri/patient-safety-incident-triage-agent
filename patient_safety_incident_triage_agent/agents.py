@@ -105,6 +105,6 @@ class SafetyIncidentCoordinator:
         if "status" in q or "summary" in q:
             return f"SafetyIncident Sentinel: AHRQ Common Formats & Root Cause Event Classifier currently tracking {len(self.case_registry)} cases in on-premises memory."
         elif "guideline" in q or "standard" in q:
-            return "Active clinical surveillance operates under AHRQ Common Formats for Patient Safety validated protocols."
+            return "This prototype uses unvalidated, illustrative thresholds; it does not implement AHRQ Common Formats or SAC scoring."
         else:
-            return f"SafetyIncident Sentinel: AHRQ Common Formats & Root Cause Event Classifier executive agent online. Zero-PHI air-gapped monitoring active."
+            return f"SafetyIncident Sentinel: AHRQ Common Formats & Root Cause Event Classifier executive agent online. Use synthetic inputs only; PHI protection is not guaranteed."
