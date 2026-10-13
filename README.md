@@ -36,7 +36,7 @@ python -m pip install -e ".[api,test]"
 python cli.py audit --task-id SYN-001 --target SYN-TARGET --primary 28 --secondary 14 --critical
 python cli.py chat Explain specifications
 python cli.py verify-audit
-python cli.py batch --input synthetic-input.csv --output results.csv
+python cli.py batch --input sample_tasks.csv --output results.csv
 python -m pytest -q
 ```
 
