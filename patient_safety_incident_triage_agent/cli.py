@@ -10,6 +10,17 @@ from .agents import SafetyIncidentCoordinator
 
 coordinator = SafetyIncidentCoordinator()
 
+def parse_boolean(value):
+    if isinstance(value, bool):
+        return value
+    text = str(value).strip().lower()
+    if text in {"true", "1", "yes", "y"}:
+        return True
+    if text in {"false", "0", "no", "n", ""}:
+        return False
+    raise ValueError(f"Invalid boolean value: {value!r}")
+
+
 
 def main(argv=None):
     parser = argparse.ArgumentParser(prog="patient-safety-incident-triage-agent", description="SafetyIncident Sentinel: AHRQ Common Formats & Root Cause Event Classifier")
@@ -82,7 +93,7 @@ def main(argv=None):
                 primary_metric=float(r.get("metric_primary", r.get("primary_metric", 15.0))),
                 secondary_metric=float(r.get("metric_secondary", r.get("secondary_metric", 5.0))),
                 status_flag=r.get("status_flag", r.get("status_text", "NORMAL")),
-                is_stat=bool(r.get("is_stat", r.get("critical_flag", False))),
+                is_stat=parse_boolean(r.get("is_stat", r.get("critical_flag", False))),
             )
             dossier = coordinator.process_case(case)
             row_dict = dict(r)
