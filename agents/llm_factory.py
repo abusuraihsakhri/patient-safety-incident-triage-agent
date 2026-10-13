@@ -1,5 +1,5 @@
 """
-Inference Engine supporting local Ollama, Claude, OpenAI, and deterministic Mock with Zero-PHI checks.
+Deterministic mock response adapter. External LLM providers are not implemented.
 """
 from typing import Dict, Any, Optional
 from .base import PHIGuard
@@ -15,7 +15,7 @@ class MockLLM:
 
 
 class LLMFactory:
-    """Creates configured LLM client instances with zero-PHI protection."""
+    """Creates the demonstration-only mock adapter."""
 
     @staticmethod
     def create(provider: str = "mock", system_name: str = "Patient Safety Incident Triage Agent"):
