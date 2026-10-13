@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "patient-safety-incident-triage-engine"
 version = "2.0.0"
-description = "SafetyIncident Sentinel: AHRQ Common Formats & Root Cause Event Classifier"
+description = "Illustrative deterministic incident evaluation tools; not clinically validated"
 readme = "README.md"
 authors = [{ name = "Dr. Abu Suraih Sakhri", email = "abusuraih@example.com" }]
 license = { text = "MIT" }
@@ -16,7 +16,7 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Medical Science Apps.",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = ["pydantic>=2,<3"]
 
 [project.optional-dependencies]
