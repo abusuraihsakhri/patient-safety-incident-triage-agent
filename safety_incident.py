@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 SafetyIncident Sentinel: AHRQ Common Formats & Root Cause Event Classifier
-Categorizes voluntary hospital safety event reports (medication error, fall, pressure injury, near miss) and scores SAC (Safety Assessment Code) 1-4.
+Demonstrates simple threshold and keyword rules on synthetic inputs; does not calculate SAC.
 
 Domain: Patient Safety & Quality
 Author: Dr. Abu Suraih Sakhri
@@ -43,8 +43,8 @@ class Severity(str):
 class DomainKnowledgeRegistry:
     """Enterprise domain rules, guideline matrices, and evidence benchmarks."""
     SYSTEM_VERSION = "2.0.0-PRO-CLINICAL"
-    ZERO_PHI_COMPLIANCE = True
-    HIPAA_SAFE_HARBOR = "ACTIVE_ON_PREMISES"
+    ZERO_PHI_COMPLIANCE = False
+    HIPAA_SAFE_HARBOR = "NOT_ASSESSED"
 
     @staticmethod
     def audit_security_and_integrity(payload: Dict[str, Any]) -> List[str]:
@@ -176,9 +176,9 @@ class SafetyIncidentCoordinator:
         if "summary" in q or "status" in q:
             return f"SafetyIncident Sentinel: AHRQ Common Formats & Root Cause Event Classifier currently tracking {len(self.case_registry)} cases in local air-gapped memory."
         elif "guidelines" in q or "protocol" in q:
-            return "All sub-agents operate under validated consensus clinical algorithms and CAP/CLSI/NCCN/WHO standards."
+            return "These are unvalidated example rules, not validated clinical algorithms."
         else:
-            return f"SafetyIncident Sentinel: AHRQ Common Formats & Root Cause Event Classifier executive agent online. Continuous supervisory monitoring active across all domain parameters."
+            return f"SafetyIncident Sentinel: AHRQ Common Formats & Root Cause Event Classifier executive agent online. No continuous monitoring or clinical validation is provided."
 
 
 coordinator = SafetyIncidentCoordinator()
